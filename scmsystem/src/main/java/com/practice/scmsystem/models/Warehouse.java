@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -24,7 +25,7 @@ public class Warehouse implements Serializable{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(orphanRemoval = true,cascade = CascadeType.ALL)
 	private List<Item> inventory;
 	
 	public long getId() {

@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.practice.scmsystem.interfaces.SourceEntity;
 import com.practice.scmsystem.models.Item;
 import com.practice.scmsystem.models.Warehouse;
 import com.practice.scmsystem.repositories.ItemRepository;
+import com.practice.scmsystem.repositories.SourceEntityRepository;
 import com.practice.scmsystem.repositories.WarehouseRepository;
 import com.practice.scmsystem.utils.ITEMSTATUS;
 
@@ -28,11 +30,9 @@ public class PostController {
 	@Autowired
 	private ItemRepository itemRepository;
 	
-	/*
-	 * @Autowired private SourceEntityRepository sourceEntityRepository;
-	 * 
-	 * @Autowired private DestinationEntityRepository destinationEntityRepository;
-	 */
+	@Autowired
+	private SourceEntityRepository sourceEntityRepository;
+	
 	@Autowired
 	private WarehouseRepository warehouseRepository;
 	
@@ -43,9 +43,8 @@ public class PostController {
 	}
 	
 	@PostMapping("/warehouse/{warehouseid}/additems")
-	public boolean addItems(@PathVariable(name = "warehouseid") long warehouseid,@RequestBody List<Item> items)
+	public boolean addItemsToWarehouse(@PathVariable(name = "warehouseid") long warehouseid,@RequestBody List<Item> items)
 	{
-		System.out.println("Items "+items);
 		items.forEach(item->item.setStatus(ITEMSTATUS.AT_WAREHOUSE.toString()));
 		Optional<Warehouse> warehouse= warehouseRepository.findById(warehouseid);
 		if(warehouse.isPresent())
@@ -57,5 +56,25 @@ public class PostController {
 			return true;
 		}
 		return false;
+	}
+	
+	@PostMapping("/source/create")
+	public SourceEntity createSourceEntity(@RequestBody SourceEntity sourceEntity) {
+		return sourceEntityRepository.save(sourceEntity);
+	}
+	
+	@PostMapping("/source/{sourceid}/additems")
+	public List<Item> addItemsToSource(@PathVariable(name = "sourceid") long sourceid,@RequestBody List<Item> items) {
+		items.forEach(item->item.setStatus(ITEMSTATUS.AT_SOURCE.toString()));
+		Optional<SourceEntity> sourceOptional = sourceEntityRepository.findById(sourceid);
+		if(sourceOptional.isPresent())
+		{
+			List<Item> inventory = sourceOptional.get().getInventory();
+			inventory.addAll(items);
+			sourceOptional.get().setInventory(inventory);
+			sourceEntityRepository.save(sourceOptional.get());
+			return sourceOptional.get().getInventory();
+		}
+		return null;
 	}
 }

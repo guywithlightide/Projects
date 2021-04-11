@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.practice.scmsystem.interfaces.SourceEntity;
 
 @Repository
-public interface SourceEntityRepository extends CrudRepository<SourceEntity, String>{
+public interface SourceEntityRepository extends CrudRepository<SourceEntity, Long>{
 
 }

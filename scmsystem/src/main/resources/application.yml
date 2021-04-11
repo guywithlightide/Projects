@@ -1,0 +1,20 @@
+server:
+   port: 8082
+spring:
+   jpa:
+      hibernate:
+         ddl-auto: create-drop
+   datasource:
+      driverClassName: org.postgresql.Driver
+      url: "jdbc:postgresql://localhost:5432/scmappdb"
+      username: scmappmaster
+      password: scmapp
+      platform: postgres
+   database: POSTGRESQL 
+   show-sql: true
+   generate-ddl: true
+   properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+   application:
+      name: Supply Chain Management Application
+         

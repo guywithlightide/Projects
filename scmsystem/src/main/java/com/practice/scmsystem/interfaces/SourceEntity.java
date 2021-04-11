@@ -2,21 +2,18 @@ package com.practice.scmsystem.interfaces;
 
 import java.util.Map;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.practice.scmsystem.models.Item;
 
-@Entity
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className")
 public abstract class SourceEntity {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	protected long id;
-	protected String name;
+	public String type;
 	public abstract Map<String,Item> getInventory();
 	public abstract boolean procureItem();
 	public abstract void sendItem();
+	@Override
+	public String toString() {
+		return "SourceEntity [type=" + type + "]";
+	}
+	
 }

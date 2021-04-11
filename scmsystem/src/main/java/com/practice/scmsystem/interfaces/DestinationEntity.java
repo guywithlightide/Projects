@@ -2,14 +2,12 @@ package com.practice.scmsystem.interfaces;
 
 import java.util.Map;
 
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.practice.scmsystem.models.Item;
 
-@Entity
 public abstract class DestinationEntity {
 	
 	@Id

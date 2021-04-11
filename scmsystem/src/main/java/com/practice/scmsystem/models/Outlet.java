@@ -4,11 +4,8 @@ import java.util.Map;
 
 import com.practice.scmsystem.interfaces.DestinationEntity;
 
-public class Outlet extends DestinationEntity {
 
-	public Outlet() {
-		// TODO Auto-generated constructor stub
-	}
+public class Outlet extends DestinationEntity {
 
 	@Override
 	public Map<String, Item> getInventory() {

@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.practice.scmsystem.interfaces.SourceEntity;
 import com.practice.scmsystem.models.Item;
+import com.practice.scmsystem.models.SourceEntity;
 import com.practice.scmsystem.models.Warehouse;
 import com.practice.scmsystem.repositories.DestinationEntityRepository;
 import com.practice.scmsystem.repositories.ItemRepository;
@@ -70,6 +70,11 @@ public class GetController {
 	@GetMapping("/source/all")
 	public List<SourceEntity> getAllSources() {
 		return (List<SourceEntity>) sourceEntityRepository.findAll();
+	}
+	
+	@GetMapping("item/all")
+	public List<Item> getAllItems() {
+		return (List<Item>) itemRepository.findAll();
 	}
 	
 }

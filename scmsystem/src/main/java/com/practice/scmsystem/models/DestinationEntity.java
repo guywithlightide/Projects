@@ -1,4 +1,4 @@
-package com.practice.scmsystem.interfaces;
+package com.practice.scmsystem.models;
 
 import java.util.List;
 
@@ -9,19 +9,19 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.practice.scmsystem.models.Item;
+import com.practice.scmsystem.utils.DestinationEntityType;
 
 @Entity
-public class SourceEntity {
-	
+public class DestinationEntity {
+		
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	private String name;
 	
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "destinationEntity")
 	private List<Item> inventory;
-	private String type;
+	private DestinationEntityType type;
 	public long getId() {
 		return id;
 	}
@@ -34,26 +34,26 @@ public class SourceEntity {
 	public void setName(String name) {
 		this.name = name;
 	}
-			
 	public List<Item> getInventory() {
 		return inventory;
 	}
 	public void setInventory(List<Item> inventory) {
 		this.inventory = inventory;
-	}
-	public String getType() {
+	}	
+	public DestinationEntityType getType() {
 		return type;
 	}
-	public void setType(String type) {
+	public void setType(DestinationEntityType type) {
 		this.type = type;
 	}
 	@Override
 	public String toString() {
 		final int maxLen = 10;
-		return "SourceEntity [id=" + id + ", name=" + name + ", items="
-				+ (inventory != null ? inventory.subList(0, Math.min(inventory.size(), maxLen)) : null) + ", type=" + type + "]";
+		return "DestinationEntity [id=" + id + ", name=" + name + ", inventory="
+				+ (inventory != null ? inventory.subList(0, Math.min(inventory.size(), maxLen)) : null) + ", type="
+				+ type + "]";
 	}
 	
 	
-	
+
 }

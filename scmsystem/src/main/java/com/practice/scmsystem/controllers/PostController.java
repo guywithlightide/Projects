@@ -20,6 +20,7 @@ import com.practice.scmsystem.models.SourceEntity;
 import com.practice.scmsystem.models.TransportEntity;
 import com.practice.scmsystem.models.Warehouse;
 import com.practice.scmsystem.repositories.DestinationEntityRepository;
+import com.practice.scmsystem.repositories.ItemQueries;
 import com.practice.scmsystem.repositories.ItemRepository;
 import com.practice.scmsystem.repositories.SourceEntityRepository;
 import com.practice.scmsystem.repositories.TransportEntityRepository;
@@ -36,6 +37,9 @@ public class PostController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PostController.class.getName());
 
+	@Autowired
+	private ItemQueries itemQueries;	
+	
 	@Autowired
 	private ItemRepository itemRepository;
 
@@ -91,6 +95,13 @@ public class PostController {
 			return sourceOptional.get().getInventory();
 		}
 		return null;
+	}
+	
+	@PostMapping(path = "/item/like")
+	public List<Item> getItemsFilteredByStatus(@RequestBody Item item) {
+		item.setStatus(ITEMSTATUS.valueOf(item.getStatus().toString()));
+		LOGGER.info("Item={}",item.toString());
+		return itemQueries.findItemsLike(item);
 	}
 
 	@PostMapping("/randomtest/generate")

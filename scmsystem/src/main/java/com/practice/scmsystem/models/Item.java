@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import org.springframework.lang.Nullable;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.practice.scmsystem.utils.ITEMSTATUS;
 
@@ -28,13 +30,13 @@ public class Item implements Serializable, Comparator<Item>{
 	private ITEMSTATUS status;
 
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JsonBackReference
+	@JsonBackReference(value = "sourceEntity")
 	private SourceEntity sourceEntity;
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JsonBackReference
+	@JsonBackReference(value = "destinationEntity")
 	private DestinationEntity destinationEntity;	
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JsonBackReference
+	@JsonBackReference(value = "transportEntity")
 	private TransportEntity transportEntity;	
 		
 	

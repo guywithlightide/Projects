@@ -7,9 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.practice.scmsystem.models.Item;
@@ -27,7 +32,7 @@ public class GetController {
 	@Value("${spring.application.name}")
 	String appName;
 	private static final Logger LOGGER = LoggerFactory.getLogger(GetController.class.getName());
-
+	
 	@Autowired
 	private ItemRepository itemRepository;
 
@@ -56,7 +61,7 @@ public class GetController {
 	public List<Item> getWarehouseInventory(@PathVariable long warehouseid) {
 		return warehouseRepository.findById(warehouseid).orElse(new Warehouse()).getInventory();
 	}
-	
+
 	@GetMapping("/warehouse/all")
 	public List<Warehouse> getAllWarehouses() {
 		return (List<Warehouse>) warehouseRepository.findAll();
@@ -71,10 +76,18 @@ public class GetController {
 	public List<SourceEntity> getAllSources() {
 		return (List<SourceEntity>) sourceEntityRepository.findAll();
 	}
-	
-	@GetMapping("item/all")
+
+	@GetMapping("/item/all")
 	public List<Item> getAllItems() {
 		return (List<Item>) itemRepository.findAll();
 	}
-	
+
+	@GetMapping(path = "/item/all/bypage", params = {"pagenum","perpage","sortby"} )
+	public Page<Item> getAllItemsByPage(@RequestParam("pagenum") int pagenum, @RequestParam("perpage") int perpage,@RequestParam("sortby") String sortBy) {
+
+		Pageable pageable = PageRequest.of(pagenum, perpage, Sort.by(sortBy).ascending());
+		Page<Item> page = itemRepository.findAllByPage(pageable);
+		return page;
+	}
+
 }

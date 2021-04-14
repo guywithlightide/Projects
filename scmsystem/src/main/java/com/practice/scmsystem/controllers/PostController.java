@@ -2,6 +2,7 @@ package com.practice.scmsystem.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -98,9 +99,7 @@ public class PostController {
 	}
 	
 	@PostMapping(path = "/item/like")
-	public List<Item> getItemsFilteredByStatus(@RequestBody Item item) {
-		item.setStatus(ITEMSTATUS.valueOf(item.getStatus().toString()));
-		LOGGER.info("Item={}",item.toString());
+	public List<Item> getItemsFilteredByStatus(@RequestBody Map<String, String> item) {
 		return itemQueries.findItemsLike(item);
 	}
 

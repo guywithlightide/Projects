@@ -2,6 +2,7 @@ package com.practice.scmsystem.repositories;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.ManagedBean;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.practice.scmsystem.models.Item;
+import com.practice.scmsystem.utils.ITEMSTATUS;
 
 @ManagedBean
 public class ItemQueries{
@@ -23,7 +25,7 @@ public class ItemQueries{
 
 	@Autowired
 	ItemRepository itemRepository;
-	public List<Item> findItemsLike(Item item) {
+	public List<Item> findItemsLike(Map<String, String> item) {
 				
 		return itemRepository.findAll(new Specification<Item>() {
 			private static final long serialVersionUID = 1L;
@@ -31,13 +33,28 @@ public class ItemQueries{
 			public Predicate toPredicate(Root<Item> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 				List<Predicate> predicates = new ArrayList<Predicate>();
 				
-				if(item.getStatus()!=null && !item.getStatus().toString().isEmpty())
+				if(item.get("name")!=null && !item.get("name").isEmpty())
 				{
-					predicates.add(criteriaBuilder.equal(root.get("status"),item.getStatus()));
+					predicates.add(criteriaBuilder.equal(root.get("name"),"%"+item.get("name")+"%"));
 				}
-				if(item.getDescription()!=null && !item.getDescription().isEmpty())
+				if(item.get("status")!=null && !item.get("status").toString().isEmpty())
 				{
-					predicates.add(criteriaBuilder.like(root.get("description"), "%"+item.getDescription()+"%"));
+					if(item.get("status").toString().contains(","))
+					{
+						String [] statuses = item.get("status").toString().split(",");
+						List<Predicate> orStatuses = new ArrayList<Predicate>();
+						for(String status : statuses)
+						{
+							orStatuses.add(criteriaBuilder.equal(root.get("status"),ITEMSTATUS.valueOf(status)));
+						}
+						predicates.add(criteriaBuilder.or(orStatuses.toArray(new Predicate[0])));
+					}
+					else
+						predicates.add(criteriaBuilder.equal(root.get("status"),ITEMSTATUS.valueOf(item.get("status"))));
+				}
+				if(item.get("description")!=null && !item.get("description").isEmpty())
+				{
+					predicates.add(criteriaBuilder.like(root.get("description"), "%"+item.get("description")+"%"));
 				}
 				return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
 			}

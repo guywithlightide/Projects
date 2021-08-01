@@ -1,0 +1,58 @@
+server:
+   port: 8002
+
+spring:
+   application:
+      name: user-service
+
+reilience4j:
+   circuitbreaker:
+      configs:
+         default:
+            registerHealthIndicator: true
+      instances:
+         userFallBack:
+            baseConfig: default
+            registerHealthIndicator: true
+            eventConsumerBufferSize: 10
+            automaticTransitionFromOpenToHalfOpenEnabled: true
+            failureRateThreshold: 50
+            minimumNumberOfCalls: 5
+            permittedNumberOfCallsInHalfOpenState: 3
+            slidingWindowSize: 10
+            waitDurationInOpenState: 5s
+            slidingWindowType: count-based
+
+management:
+   health:
+      circuitbreakers:
+         enabled: true
+   endpoints:
+      web:
+         expose:
+            - health
+            - metrics
+         exposure:
+            include:
+              - health
+              - metrics
+   endpoint:
+      health:
+         show-details: always
+   metrics:
+      distribution:
+         percentiles-histogram:
+            http:
+               server:
+               request: true
+            resielence4j:
+               circuitbreaker:
+                  calls: true
+eureka:
+   client:
+      register-with-eureka: true
+      fetch-registry: true
+      service-url:
+         defaultZone: http://localhost:8000/eureka
+   instance:
+      hostname: localhost
